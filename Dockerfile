@@ -8,13 +8,15 @@ RUN pip install torch_nightly -f https://download.pytorch.org/whl/nightly/cpu/to
 RUN pip install fastai
 
 # Install starlette and uvicorn
-RUN pip install starlette[full] aiohttp
+RUN pip install starlette[full] aiohttp uvicorn
 
-ADD cougar.py cougar.py
-ADD usa-inaturalist-cats.pth usa-inaturalist-cats.pth
+# copy main python, model & static files
+COPY cloth_categories.py cloth_categories.py
+COPY data data
+COPY static static
 
 # Run it once to trigger resnet download
-RUN python cougar.py
+RUN python cloth_categories.py
 
 EXPOSE 8008
 
