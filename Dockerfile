@@ -3,22 +3,13 @@ FROM python:3.6-slim-stretch
 RUN apt update
 RUN apt install -y python3-dev gcc
 
-# Install pytorch and fastai
-RUN pip install torch_nightly -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html
-RUN pip install fastai
+ADD requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-# Install starlette and uvicorn
-RUN pip install starlette[full] aiohttp uvicorn
+COPY app app/
 
-# copy main python, model & static files
-COPY cloth_categories.py cloth_categories.py
-COPY data data
-COPY static static
-
-# Run it once to trigger resnet download
-RUN python cloth_categories.py
+RUN python app/server.py
 
 EXPOSE 8008
 
-# Start the server
-CMD ["python", "cougar.py", "serve"]
+CMD ["python", "app/server.py", "serve"]

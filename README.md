@@ -59,5 +59,5 @@ if __name__ == "__main__":
 This is repo for my article
 
 
-A web app created using https://www.starlette.io framework with Fast.AI and hosted on now.sh in a docker
+This web app was created using https://www.starlette.io framework with Fast.AI and is hosted on now.sh in a docker
 
