@@ -1,8 +1,20 @@
+var FILE_CHANGE_FLAG = false;
+
 var el = x => document.getElementById(x);
+
+var submit_btn = document.getElementById('submit_btn').addEventListener('mouseover', submit_btn_mouseover);
+
+function submit_btn_mouseover(e) {
+    if (!FILE_CHANGE_FLAG) {
+        alert('Please choose image file before Submission!');
+    }
+}
+
 
 var upload_img = document.getElementById('inp_file').addEventListener('change', fileChange, false);
 
 function fileChange(e) {
+    FILE_CHANGE_FLAG = true;
     document.getElementById('inp_img').value = '';
 
     var file = e.target.files[0];
@@ -14,7 +26,7 @@ function fileChange(e) {
 
             var image = new Image();
             image.onload = function(imageEvent) {	
-                var max_size = 500;
+                var max_size = 420;
                 var w = image.width;
                 var h = image.height;
                 // console.log("width:",w, "height:", h);
@@ -25,15 +37,18 @@ function fileChange(e) {
 
                 var canvas = document.createElement('canvas');
                 // FORCEFUL to portrait mode only images
-                if (canvas.width > canvas.height) {
-                    canvas.width = h;
-                    canvas.height = w;
-                    // console.log("I am called");
+                if (w > h) {
+                    // canvas.width = h;
+                    // canvas.height = w;
+                    canvas.width = w;
+                    canvas.height = h;
                     var ctx = canvas.getContext('2d');
                     // move the rotation point to the center of the rect
-                    ctx.translate( h / 2, w / 2);
-                    ctx.rotate(-90 * Math.PI / 180);
-                    ctx.drawImage(image, -h / 2, -w / 2, h, w);
+                    // ctx.translate( h / 2, w / 2);
+                    ctx.translate( w / 2, h / 2);
+                    ctx.rotate(90 * Math.PI / 180);
+                    // ctx.drawImage(image, -h / 2, -w / 2, h, w);
+                    ctx.drawImage(image, -w / 2, -h / 2, w, h);
                 }
                 else {
                     canvas.width = w;
@@ -41,9 +56,10 @@ function fileChange(e) {
                     canvas.getContext('2d').drawImage(image, 0, 0, w, h);
                 }
                 if (file.type == "image/jpeg") {
-                var dataURL = canvas.toDataURL("image/jpeg", 1.0);
+                var dataURL = canvas.toDataURL("image/jpeg");
+
                 } else {
-                var dataURL = canvas.toDataURL("image/png");	
+                var dataURL = canvas.toDataURL("image/png");
                 }
                 el('image-picked').src = dataURL;
                 el('image-picked').className = '';
@@ -57,6 +73,6 @@ function fileChange(e) {
         reader.readAsDataURL(file);
     } else {
         document.getElementById('inp_file').value = '';	
-        alert('Please only select images in JPG- or PNG-format.');	
+        alert('Please select image only in JPG or PNG format!');	
     }
 }
